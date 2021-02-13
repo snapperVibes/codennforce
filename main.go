@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 //import (
@@ -204,6 +205,11 @@ INSERT INTO realestateportal (url, address, municipality, owner, changemail)
 VALUES ($1, $2, $3, $4, $5);`
 	_, err := db.Exec(insertSQL, url, pq.Array(m["Address"]), pq.Array(m["Muni"]), pq.Array(m["Owner"]), pq.Array(m["ChangeMail"]))
 	return err
+}
+
+func ParseName(name []byte) string {
+	s := string(name)
+	return strings.TrimSpace(s)
 }
 
 func main() {
