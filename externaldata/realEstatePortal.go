@@ -1,0 +1,5 @@
+package externaldata
+
+func main() {
+
+}

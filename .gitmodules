@@ -1,0 +1,3 @@
+[submodule "scrpits/golang_code_generator"]
+	path = scrpits/golang_code_generator
+	url = https://github.com/snapperVibes/golang_code_generator

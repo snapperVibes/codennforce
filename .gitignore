@@ -26,5 +26,51 @@
 # End of https://www.toptal.com/developers/gitignore/api/go
 
 .idea
-.env
+.env.init
 _main.go
+
+# Standard Python ignores (https://www.toptal.com/developers/gitignore/api/python)
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Environments
+.env*
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*
+
+
+ignore
+_init.sql
+init.sql
