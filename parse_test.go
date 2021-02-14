@@ -5,20 +5,20 @@ import (
 	"testing"
 )
 
-// Test cleanOwnerString
+// Test cleanString
 
 func TestSingle(t *testing.T) {
-	ensure.DeepEqual(t, cleanOwnerString("VIBES SNAPPER     "), "VIBES SNAPPER")
+	ensure.DeepEqual(t, cleanString("VIBES SNAPPER     "), "VIBES SNAPPER")
 }
 
 func TestSingleSpaceAmpersand(t *testing.T) {
-	ensure.DeepEqual(t, cleanOwnerString("VIBES SNAPPER JR &  MARY R     "), "VIBES SNAPPER JR & MARY R")
+	ensure.DeepEqual(t, cleanString("VIBES SNAPPER JR &  MARY R     "), "VIBES SNAPPER JR & MARY R")
 }
 
 func TestLong(t *testing.T) {
 	ensure.DeepEqual(
 		t,
-		cleanOwnerString("EAST ALLEGHENY SCHOOL DISTRICT EAST   MCKEESPORT BOROUGH &  ALLEGHENY COUNTY   "),
+		cleanString("EAST ALLEGHENY SCHOOL DISTRICT EAST   MCKEESPORT BOROUGH &  ALLEGHENY COUNTY   "),
 		"EAST ALLEGHENY SCHOOL DISTRICT EAST MCKEESPORT BOROUGH & ALLEGHENY COUNTY")
 }
 
@@ -26,7 +26,7 @@ func TestLong(t *testing.T) {
 func TestBrokenExample(t *testing.T) {
 	ensure.DeepEqual(
 		t,
-		cleanOwnerString("CHURCH OF THE BRETHREN OF EAST MC KEESPO   RT   "),
+		cleanString("CHURCH OF THE BRETHREN OF EAST MC KEESPO   RT   "),
 		"CHURCH OF THE BRETHREN OF EAST MC KEESPO RT")
 }
 

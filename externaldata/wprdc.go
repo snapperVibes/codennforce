@@ -3,100 +3,100 @@ package externaldata
 import "time"
 
 type wprdcFields struct {
-	_id                       int
-	PARID                     string
-	PROPERTYHOUSENUM          string
-	PROPERTYFRACTION          string
-	PROPERTYADDRESS           string
-	PROPERTYCITY              string
-	PROPERTYSTATE             string
-	PROPERTYUNIT              string
-	PROPERTYZIP               string
-	MUNICODE                  string
-	MUNIDESC                  string
-	SCHOOLCODE                string
-	SCHOOLDESC                string
-	LEGAL1                    string
-	LEGAL2                    string
-	LEGAL3                    string
-	NEIGHCODE                 string
-	NEIGHDESC                 string
-	TAXCODE                   string
-	TAXDESC                   string
-	TAXSUBCODE                string
-	TAXSUBCODE_DESC           string
-	OWNERCODE                 string
-	OWNERDESC                 string
-	CLASS                     string
-	CLASSDESC                 string
-	USECODE                   string
-	USEDESC                   string
-	LOTAREA                   float64
-	HOMESTEADFLAG             string
-	CLEANGREEN                string
-	FARMSTEADFLAG             string
-	ABATEMENTFLAG             string
-	RECORDDATE                string
-	SALEDATE                  string
-	SALEPRICE                 float64
-	SALECODE                  string
-	SALEDESC                  string
-	DEEDBOOK                  string
-	DEEDPAGE                  string
-	PREVSALEDATE              string
-	PREVSALEPRICE             float64
-	PREVSALEDATE2             string
-	PREVSALEPRICE2            float64
-	CHANGENOTICEADDRESS1      string
-	CHANGENOTICEADDRESS2      string
-	CHANGENOTICEADDRESS3      string
-	CHANGENOTICEADDRESS4      string
-	COUNTYBUILDING            float64
-	COUNTYLAND                float64
-	COUNTYTOTAL               float64
-	COUNTYEXEMPTBLDG          float64
-	LOCALBUILDING             float64
-	LOCALLAND                 float64
-	LOCALTOTAL                float64
-	FAIRMARKETBUILDING        float64
-	FAIRMARKETLAND            float64
-	FAIRMARKETTOTAL           float64
-	STYLE                     string
-	STYLEDESC                 string
-	STORIES                   string
-	YEARBLT                   float64
-	EXTERIORFINISH            string
-	EXTFINISH_DESC            string
-	ROOF                      string
-	ROOFDESC                  string
-	BASEMENT                  string
-	BASEMENTDESC              string
-	GRADE                     string
-	GRADEDESC                 string
-	CONDITION                 string
-	CONDITIONDESC             string
-	CDU                       string
-	CDUDESC                   string
-	TOTALROOMS                float64
-	BEDROOMS                  float64
-	FULLBATHS                 float64
-	HALFBATHS                 float64
-	HEATINGCOOLING            string
-	HEATINGCOOLINGDESC        string
-	FIREPLACES                float64
-	BSMTGARAGE                string
-	FINISHEDLIVINGAREA        float64
-	CARDNUMBER                float64
-	ALT_ID                    string
-	TAXYEAR                   float64
-	ASOFDATE                  time.Time
-	MUNICIPALITY              string
-	NEIGHBORHOOD              string
-	PGH_COUNCIL_DISTRICT      string
-	PGH_WARD                  string
-	PGH_PUBLIC_WORKS_DIVISION string
-	PGH_POLICE_ZONE           string
-	PGH_FIRE_ZONE             string
-	TRACT                     string
-	BLOCK_GROUP               string
+	Id                     int       `json:"_id"`
+	Parid                  string    `json:"PARID"`
+	Propertyhousenum       string    `json:"PROPERTYHOUSENUM"`
+	Propertyfraction       string    `json:"PROPERTYFRACTION"`
+	Propertyaddress        string    `json:"PROPERTYADDRESS"`
+	Propertycity           string    `json:"PROPERTYCITY"`
+	Propertystate          string    `json:"PROPERTYSTATE"`
+	Propertyunit           string    `json:"PROPERTYUNIT"`
+	Propertyzip            string    `json:"PROPERTYZIP"`
+	Municode               string    `json:"MUNICODE"`
+	Munidesc               string    `json:"MUNIDESC"`
+	Schoolcode             string    `json:"SCHOOLCODE"`
+	Schooldesc             string    `json:"SCHOOLDESC"`
+	Legal1                 string    `json:"LEGAL1"`
+	Legal2                 string    `json:"LEGAL2"`
+	Legal3                 string    `json:"LEGAL3"`
+	Neighcode              string    `json:"NEIGHCODE"`
+	Neighdesc              string    `json:"NEIGHDESC"`
+	Taxcode                string    `json:"TAXCODE"`
+	Taxdesc                string    `json:"TAXDESC"`
+	Taxsubcode             string    `json:"TAXSUBCODE"`
+	TaxsubcodeDesc         string    `json:"TAXSUBCODE_DESC"`
+	Ownercode              string    `json:"OWNERCODE"`
+	Ownerdesc              string    `json:"OWNERDESC"`
+	Class                  string    `json:"CLASS"`
+	Classdesc              string    `json:"CLASSDESC"`
+	Usecode                string    `json:"USECODE"`
+	Usedesc                string    `json:"USEDESC"`
+	Lotarea                float64   `json:"LOTAREA"`
+	Homesteadflag          string    `json:"HOMESTEADFLAG"`
+	Cleangreen             string    `json:"CLEANGREEN"`
+	Farmsteadflag          string    `json:"FARMSTEADFLAG"`
+	Abatementflag          string    `json:"ABATEMENTFLAG"`
+	Recorddate             string    `json:"RECORDDATE"`
+	Saledate               string    `json:"SALEDATE"`
+	Saleprice              float64   `json:"SALEPRICE"`
+	Salecode               string    `json:"SALECODE"`
+	Saledesc               string    `json:"SALEDESC"`
+	Deedbook               string    `json:"DEEDBOOK"`
+	Deedpage               string    `json:"DEEDPAGE"`
+	Prevsaledate           string    `json:"PREVSALEDATE"`
+	Prevsaleprice          float64   `json:"PREVSALEPRICE"`
+	Prevsaledate2          string    `json:"PREVSALEDATE2"`
+	Prevsaleprice2         float64   `json:"PREVSALEPRICE2"`
+	Changenoticeaddress1   string    `json:"CHANGENOTICEADDRESS1"`
+	Changenoticeaddress2   string    `json:"CHANGENOTICEADDRESS2"`
+	Changenoticeaddress3   string    `json:"CHANGENOTICEADDRESS3"`
+	Changenoticeaddress4   string    `json:"CHANGENOTICEADDRESS4"`
+	Countybuilding         float64   `json:"COUNTYBUILDING"`
+	Countyland             float64   `json:"COUNTYLAND"`
+	Countytotal            float64   `json:"COUNTYTOTAL"`
+	Countyexemptbldg       float64   `json:"COUNTYEXEMPTBLDG"`
+	Localbuilding          float64   `json:"LOCALBUILDING"`
+	Localland              float64   `json:"LOCALLAND"`
+	Localtotal             float64   `json:"LOCALTOTAL"`
+	Fairmarketbuilding     float64   `json:"FAIRMARKETBUILDING"`
+	Fairmarketland         float64   `json:"FAIRMARKETLAND"`
+	Fairmarkettotal        float64   `json:"FAIRMARKETTOTAL"`
+	Style                  string    `json:"STYLE"`
+	Styledesc              string    `json:"STYLEDESC"`
+	Stories                string    `json:"STORIES"`
+	Yearblt                float64   `json:"YEARBLT"`
+	Exteriorfinish         string    `json:"EXTERIORFINISH"`
+	ExtfinishDesc          string    `json:"EXTFINISH_DESC"`
+	Roof                   string    `json:"ROOF"`
+	Roofdesc               string    `json:"ROOFDESC"`
+	Basement               string    `json:"BASEMENT"`
+	Basementdesc           string    `json:"BASEMENTDESC"`
+	Grade                  string    `json:"GRADE"`
+	Gradedesc              string    `json:"GRADEDESC"`
+	Condition              string    `json:"CONDITION"`
+	Conditiondesc          string    `json:"CONDITIONDESC"`
+	Cdu                    string    `json:"CDU"`
+	Cdudesc                string    `json:"CDUDESC"`
+	Totalrooms             float64   `json:"TOTALROOMS"`
+	Bedrooms               float64   `json:"BEDROOMS"`
+	Fullbaths              float64   `json:"FULLBATHS"`
+	Halfbaths              float64   `json:"HALFBATHS"`
+	Heatingcooling         string    `json:"HEATINGCOOLING"`
+	Heatingcoolingdesc     string    `json:"HEATINGCOOLINGDESC"`
+	Fireplaces             float64   `json:"FIREPLACES"`
+	Bsmtgarage             string    `json:"BSMTGARAGE"`
+	Finishedlivingarea     float64   `json:"FINISHEDLIVINGAREA"`
+	Cardnumber             float64   `json:"CARDNUMBER"`
+	AltId                  string    `json:"ALT_ID"`
+	Taxyear                float64   `json:"TAXYEAR"`
+	Asofdate               time.Time `json:"ASOFDATE"`
+	Municipality           string    `json:"MUNICIPALITY"`
+	Neighborhood           string    `json:"NEIGHBORHOOD"`
+	PghCouncilDistrict     string    `json:"PGH_COUNCIL_DISTRICT"`
+	PghWard                string    `json:"PGH_WARD"`
+	PghPublicWorksDivision string    `json:"PGH_PUBLIC_WORKS_DIVISION"`
+	PghPoliceZone          string    `json:"PGH_POLICE_ZONE"`
+	PghFireZone            string    `json:"PGH_FIRE_ZONE"`
+	Tract                  string    `json:"TRACT"`
+	BlockGroup             string    `json:"BLOCK_GROUP"`
 }

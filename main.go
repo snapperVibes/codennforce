@@ -18,31 +18,31 @@ import (
 	"strings"
 )
 
-func main() {
+// One or more space or non-breaking space
 
+var spaces = regexp.MustCompile(`[\x{0020}\x{00A0}]+`)
+
+type scrapedHTML [][]byte
+type record = []interface{}
+type wprdcResponse struct {
+	Help    string      `json:"help"`
+	Success bool        `json:"success"`
+	Result  interface{} `json:"result"`
+	Err     interface{} `json:"error"`
+}
+
+// Todo: Add confirmation
+const SnapScrapeId = 20
+
+func main() {
 	db, err := connectToDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// Select municodes
-	rows, err := db.Query("SELECT municode FROM municipality WHERE municode != 999;")
+	municodes, err := selectMunicodes(db)
 	if err != nil {
 		log.Fatal(err)
 	}
-	var municodes []int
-	for rows.Next() {
-		var municode int
-		err := rows.Scan(&municode)
-		if err != nil {
-			log.Fatal(err)
-		}
-		municodes = append(municodes, municode)
-	}
-	if municodes == nil {
-		log.Fatal(municodes)
-	}
-	fmt.Println(municodes)
 
 	// Download Data from WPRDC
 	b := downloadDataFromWprdc(strconv.Itoa(municodes[0]))
@@ -51,20 +51,20 @@ func main() {
 	if jsonErr != nil {
 		log.Fatal(jsonErr)
 	}
-	var records []interface{}
-	records = response.Result.(map[string]interface{})["records"].([]interface{})
+	var records record
+	records = response.Result.(map[string]interface{})["records"].(record)
 
 	for i, _record := range records {
-		record := _record.(map[string]interface{})
-		parcelId := record["PARID"].(string)
+		m := _record.(map[string]interface{})
+		parcelId := m["PARID"].(string)
 		portalUrl := fmt.Sprintf("http://www2.alleghenycounty.us/RealEstate/GeneralInfo.aspx?ParcelID=%s", parcelId)
 		r, err := http.Get(portalUrl)
 		if err != nil {
 			log.Fatal(err)
 		}
 		myMap := parseGeneralPage(r.Body)
-		//fmt.Printf("%d\t%s\n", i, myMap)
 
+		// DATABASE INSERTS
 		err = insertRealEstatePortal(db, myMap, portalUrl)
 		if err != nil {
 			log.Fatal(err)
@@ -74,30 +74,40 @@ func main() {
 			log.Fatal(err)
 		}
 		dirtyOwner := myMap["Owner"]
-		cleanedNames := cleanOwners(dirtyOwner)
-		err = insertOwners(db, parcelKey, cleanedNames)
+		owner := cleanScrapedHTML(dirtyOwner)
+		err = insertOwners(db, parcelKey, owner)
+		if err != nil {
+			log.Fatal(err)
+		}
+		dirtyAddress := myMap["Address"]
+		address := cleanScrapedHTML(dirtyAddress)
+		err = insertAddress(db, parcelKey, address)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("%d\t%s\n", i, cleanedNames)
+		fmt.Printf("%d\t%s\t%s\n", i, owner, address)
 	}
 }
 
-// Todo: Add confirmation
-const SnapScrapeId = 20
-
-type wprdcResponse struct {
-	// Exported fields?
-	Help    string      `json:"help"`
-	Success bool        `json:"success"`
-	Result  interface{} `json:"result"`
-	Err     interface{} `json:"error"`
+func selectMunicodes(db *sql.DB) ([]int, error) {
+	var municodes []int
+	rows, err := db.Query("SELECT municode FROM municipality WHERE municode != 999;")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var municode int
+		err = rows.Scan(&municode)
+		municodes = append(municodes, municode)
+	}
+	fmt.Println("Municodes selected")
+	return municodes, err
 }
 
-func parseGeneralPage(r io.ReadCloser) map[string][][]byte {
+func parseGeneralPage(r io.ReadCloser) map[string]scrapedHTML {
 	defer r.Close()
-	generalPage := make(map[string][][]byte)
+	generalPage := make(map[string]scrapedHTML)
 	generalPageLabel := regexp.MustCompile(`_?lbl(?P<label>.+)`)
 	z := html.NewTokenizer(r)
 	for tt := z.Next(); tt != html.ErrorToken; tt = z.Next() {
@@ -169,41 +179,6 @@ func connectToDB() (*sql.DB, error) {
 	return db, err
 }
 
-func insertRealEstatePortal(db *sql.DB, m map[string][][]byte, url string) error {
-	//parcelid	ParcelID
-	//propertyaddress	Address
-	//municipality	Muni
-	//ownername	Owner
-	//ownermailing	ChangeMail
-	insertSQL := `
-INSERT INTO realestateportal (url, address, municipality, owner, changemail)
-VALUES ($1, $2, $3, $4, $5);`
-	_, err := db.Exec(insertSQL, url, pq.Array(m["Address"]), pq.Array(m["Muni"]), pq.Array(m["Owner"]), pq.Array(m["ChangeMail"]))
-	return err
-}
-
-var spaces = regexp.MustCompile(` {2,}`)
-
-func cleanOwners(owners [][]byte) (ret []string) {
-	for _, _owner := range owners {
-		owner := string(_owner)
-		cleaned := cleanOwnerString(owner)
-		ret = append(ret, cleaned)
-	}
-	return ret
-}
-
-func cleanOwnerString(owner string) string {
-	owner = spaces.ReplaceAllString(owner, " ")
-	return strings.TrimRight(owner, " ")
-}
-
-func insertOwners(db *sql.DB, parcelKey int, cleanedNames []string) error {
-	insertSql := "INSERT INTO owner (parcel_id, fullname, bobsource_sourceid) VALUES ($1, $2, $3);"
-	_, err := db.Exec(insertSql, parcelKey, pq.Array(cleanedNames), SnapScrapeId)
-	return err
-}
-
 func ensureParcel(db *sql.DB, parcelID string) (int, error) {
 
 	selectSql := "SELECT id FROM parcel WHERE parcelid = $1;"
@@ -219,4 +194,42 @@ func ensureParcel(db *sql.DB, parcelID string) (int, error) {
 		err = row.Scan(&id)
 	}
 	return id, err
+}
+
+func cleanScrapedHTML(scrapedHTML scrapedHTML) (ret []string) {
+	for _, _html := range scrapedHTML {
+		s := string(_html)
+		s = html.UnescapeString(s)
+		s = spaces.ReplaceAllString(s, " ")
+		s = strings.TrimSpace(s)
+		ret = append(ret, s)
+	}
+	return ret
+}
+
+func insertRealEstatePortal(db *sql.DB, m map[string]scrapedHTML, url string) error {
+	//parcelid	ParcelID
+	//propertyaddress	Address
+	//municipality	Muni
+	//ownername	Owner
+	//ownermailing	ChangeMail
+	insertSQL := `
+INSERT INTO realestateportal (url, address, municipality, owner, changemail)
+VALUES ($1, $2, $3, $4, $5);`
+	_, err := db.Exec(insertSQL, url, pq.Array(m["Address"]), pq.Array(m["Muni"]), pq.Array(m["Owner"]), pq.Array(m["ChangeMail"]))
+	return err
+}
+
+func insertOwners(db *sql.DB, key int, cleanedNames []string) error {
+	insertSql := "INSERT INTO owner (parcel_id, fullname, bobsource_sourceid) VALUES ($1, $2, $3);"
+	_, err := db.Exec(insertSql, key, pq.Array(cleanedNames), SnapScrapeId)
+	return err
+}
+
+func insertAddress(db *sql.DB, key int, address []string) error {
+	insertSql := `
+INSERT INTO address (parcel_id, fulladdress, bobsource_sourceid)
+VALUES ($1, $2, $3)`
+	_, err := db.Exec(insertSql, key, pq.Array(address), SnapScrapeId)
+	return err
 }

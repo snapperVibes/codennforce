@@ -12,6 +12,7 @@ comment on table realestateportal is 'Scraped data from the Allegheny County Rea
 create table if not exists parcel(
     -- I believe we can use parcel id as the primary key. Things break if there are multiple parcels with the same id.
     -- However, a surrogate key ("id") is used as requested.
+    -- It would also be nice to label this in some way as an entity
     id         int generated always as identity primary key ,
     parcelid   text unique,
     creationts timestamp default now()
@@ -19,17 +20,18 @@ create table if not exists parcel(
 
 create table if not exists owner(
     id                 int generated always as identity primary key ,
-    creationts         timestamp default now(),
     parcel_id          int,
     fullname           text[] not null,
-    bobsource_sourceid int
+    bobsource_sourceid int,
+    creationts         timestamp default now()
 );
 
 create table if not exists address (
    id                    int generated always as identity primary key ,
    parcel_id             int,
    fulladdress           text,
-   bobsource_sourceid    int
+   bobsource_sourceid    int,
+   creationts            timestamp default now()
 );
 
 
