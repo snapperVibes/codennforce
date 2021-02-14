@@ -5,6 +5,7 @@ from golang_code_generator.golang_code_gen import (
     to_field,
     snake_case_to_pascal,
     Field,
+    GoFile
 )
 
 
@@ -65,13 +66,16 @@ def create_real_estate_portal_struct():
                 name=id.split("lbl")[-1], type="scrapedHTML", annotation='id:"%s"' % id
             )
         )
-    return fields_to_struct("RealEstatePortal", fields)
+    return fields_to_struct("realEstatePortal", fields)
 
 
 def main():
-    print(create_wprdc_struct())
-    print(create_real_estate_portal_struct())
-
+    wprdc = create_wprdc_struct()
+    real_estate_portal = create_real_estate_portal_struct()
+    go = GoFile("external_data.go", "main")
+    go.add_element(wprdc)
+    go.add_element(real_estate_portal)
+    go.write()
 
 if __name__ == "__main__":
     main()
